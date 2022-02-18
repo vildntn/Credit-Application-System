@@ -12,6 +12,6 @@ public interface CustomerService {
     List<Customer> getAllCustomer();
     List<Customer> getAllCustomerBySortedDesc();
     Customer getCustomerById(int id);
-
+    Customer getCustomerByIdentificationNumber(String identificationNumber);
     int getMonthlyIncomeByCustomerId(int id);
 }
