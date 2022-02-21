@@ -16,4 +16,8 @@ public interface LoanApplicationService {
 
      List<LoanApplication> getAllLoanApplication();
 
+     LoanApplication getLoanApplicationByCustomerId(int id);
+
+     LoanApplication checkLoanApplicationStatus(String identificationNumber);
+
 }
