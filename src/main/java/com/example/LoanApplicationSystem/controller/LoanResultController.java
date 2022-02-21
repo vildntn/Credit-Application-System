@@ -32,5 +32,8 @@ public class LoanResultController {
         loanResultService.addLoanResult(loanResult);
     }
 
-
+    @GetMapping("/checkLoanResultByLoanApplication")
+    public String checkLoanResultByLoanApplication(int id){
+        return loanResultService.checkLoanResultByLoanApplication(id);
+    }
 }

@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/loanApplication")
+@CrossOrigin()
 public class LoanApplicationController {
 
     @Autowired
@@ -33,6 +34,14 @@ public class LoanApplicationController {
         loanApplicationService.addLoanApplication(loanApplication);
         return Messages.loanApplicationAdded;
     }
+    @GetMapping("/checkLoanApplicationStatus")
+    public LoanApplication checkLoanApplicationStatus(String identificationNumber){
+        return loanApplicationService.checkLoanApplicationStatus(identificationNumber);
+    }
 
+    @GetMapping("/getLoanApplicationByCustomerId")
+    public LoanApplication getLoanApplicationByCustomerId(int id){
+        return loanApplicationService.getLoanApplicationByCustomerId(id);
+    }
 
 }
