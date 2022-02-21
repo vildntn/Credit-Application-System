@@ -1,5 +1,6 @@
 package com.example.LoanApplicationSystem.service.iml;
 
+import com.example.LoanApplicationSystem.exception.NotFoundException;
 import com.example.LoanApplicationSystem.model.entity.LoanScore;
 import com.example.LoanApplicationSystem.repository.LoanScoreRepository;
 import com.example.LoanApplicationSystem.service.CustomerService;
@@ -7,6 +8,7 @@ import com.example.LoanApplicationSystem.service.LoanScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,8 +43,21 @@ public class LoanScoreServiceImpl implements LoanScoreService {
     }
 
     @Override
+    public List<LoanScore> getAllLoanScore() {
+        return loanScoreRepository.findAll();
+    }
+
+    @Override
     public int getLoanScoreByCustomerId(int id) {
         return loanScoreRepository.getLoanScoreByCustomerId(id);
+    }
+
+    @Override
+    public LoanScore getLoanScoreByCustomerIdentNumber(String identificationNumber) {
+        List<LoanScore> allLoanScore = getAllLoanScore();
+        return allLoanScore.stream()
+                .filter((l)->l.getCustomer().getIdentificationNumber().equals(identificationNumber))
+                .findAny().orElseThrow(()->new NotFoundException("Loan Score doesn't found"));
     }
 
 //    private LoanScore createLoanScoreToCustomerId(int customerId){

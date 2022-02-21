@@ -53,6 +53,22 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
         return loanApplicationRepository.findAll();
     }
 
+    @Override
+    public LoanApplication getLoanApplicationByCustomerId(int id) {
+        List<LoanApplication> allLoanApplication = getAllLoanApplication();
+        return allLoanApplication.stream()
+                .filter((l)->l.getCustomer().getId()==id).findFirst()
+                .orElseThrow(()-> new NotFoundException(Messages.loanApplicationDoesntFound));
+    }
 
+    @Override
+    public LoanApplication checkLoanApplicationStatus(String identificationNumber) {
+        Customer customer = customerService.getCustomerByIdentificationNumber(identificationNumber);
+        List<LoanApplication> allLoanApplication = getAllLoanApplication();
+        return allLoanApplication.stream()
+                .filter((l)->l.getCustomer().getIdentificationNumber().equals(identificationNumber))
+                .findFirst()
+                .orElseThrow(()->new NotFoundException(Messages.loanApplicationDoesntFound));
+    }
 
 }
