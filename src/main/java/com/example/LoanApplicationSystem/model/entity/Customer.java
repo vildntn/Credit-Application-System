@@ -35,9 +35,9 @@ public class Customer {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Email
-    @Column(name = "email")
-    private String email;
+//    @Email
+//    @Column(name = "email")
+//    private String email;
 
     @NotNull(message = "Monthly Income cannot be empty")
     @Column(name = "monthly_income")
