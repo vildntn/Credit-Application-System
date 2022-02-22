@@ -1,6 +1,7 @@
 package com.example.LoanApplicationSystem.service.iml;
 
 import com.example.LoanApplicationSystem.exception.NotFoundException;
+import com.example.LoanApplicationSystem.model.entity.Customer;
 import com.example.LoanApplicationSystem.model.entity.LoanScore;
 import com.example.LoanApplicationSystem.repository.LoanScoreRepository;
 import com.example.LoanApplicationSystem.service.CustomerService;
@@ -16,9 +17,7 @@ public class LoanScoreServiceImpl implements LoanScoreService {
 
     @Autowired
     private LoanScoreRepository loanScoreRepository;
-
-    @Autowired
-    private CustomerService customerService;
+    
 
     @Override
     public void addLoanScore(LoanScore loanScore) {
@@ -31,11 +30,14 @@ public class LoanScoreServiceImpl implements LoanScoreService {
         return true;
     }
 
-    @Override
-    public LoanScore updateLoanScore(LoanScore loanScore) {
-        return null;
-    }
 
+    @Override
+    public LoanScore getLoanScoreByCustomerIdentNumber(String identificationNumber) {
+        List<LoanScore> allLoanScore = getAllLoanScore();
+        return allLoanScore.stream()
+                .filter((l)->l.getCustomer().getIdentificationNumber().equals(identificationNumber))
+                .findAny().orElseThrow(()->new NotFoundException("Loan Score doesn't found"));
+    }
     @Override
     public LoanScore getLoanScoreById(int id) {
         Optional<LoanScore> loanScoreById = loanScoreRepository.findById(id);
@@ -53,19 +55,12 @@ public class LoanScoreServiceImpl implements LoanScoreService {
     }
 
     @Override
-    public LoanScore getLoanScoreByCustomerIdentNumber(String identificationNumber) {
-        List<LoanScore> allLoanScore = getAllLoanScore();
-        return allLoanScore.stream()
-                .filter((l)->l.getCustomer().getIdentificationNumber().equals(identificationNumber))
-                .findAny().orElseThrow(()->new NotFoundException("Loan Score doesn't found"));
+    public void createLoanScoreToCustomer(Customer customer) {
+        LoanScore loanScore=new LoanScore();
+        int score = (int)Math.floor(Math.random()*(3000-200+1)+200);
+        loanScore.setLoanScore(score);
+        loanScore.setCustomer(customer);
+        addLoanScore(loanScore);
     }
 
-//    private LoanScore createLoanScoreToCustomerId(int customerId){
-//
-//    }
-
-    private int createRandomLoanScore(){
-        int random_int = (int)Math.floor(Math.random()*(1000-200+1)+200);
-        return random_int;
-    }
 }
