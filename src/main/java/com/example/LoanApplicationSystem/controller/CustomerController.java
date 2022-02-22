@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
@@ -19,11 +20,12 @@ public class CustomerController {
 
     @PostMapping("/addCustomer")
     public void add(@RequestBody Customer customer) {
+
         customerService.addCustomer(customer);
     }
 
     @GetMapping(value="/{id}")
-    public Customer getCustomerById(@PathVariable Integer id){
+    public Customer getCustomerById(@PathVariable @Min(1) Integer id){
         return customerService.getCustomerById(id);
     }
 
