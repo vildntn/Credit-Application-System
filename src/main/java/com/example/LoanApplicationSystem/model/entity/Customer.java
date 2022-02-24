@@ -7,13 +7,14 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "customers")
-public class Customer {
+public class Customer implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,8 +29,8 @@ public class Customer {
     private String lastName;
 
     @NotNull(message = "Identification Number cannot be empty")
-    @Column(name = "identification_number")
-    private String identificationNumber;
+    @Column(name = "national_id")
+    private String nationalID;
 
     @NotNull(message = "Phone Number cannot be empty")
     @Column(name = "phone_number")
@@ -42,6 +43,10 @@ public class Customer {
     @NotNull(message = "Monthly Income cannot be empty")
     @Column(name = "monthly_income")
     private int monthlyIncome;
+
+//
+//    @OneToOne(cascade = CascadeType.ALL)
+//    private CreditScore loanScore;
 
 
 }
