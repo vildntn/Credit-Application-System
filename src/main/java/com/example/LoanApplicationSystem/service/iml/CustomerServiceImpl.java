@@ -2,10 +2,9 @@ package com.example.LoanApplicationSystem.service.iml;
 
 import com.example.LoanApplicationSystem.exception.NotFoundException;
 import com.example.LoanApplicationSystem.model.entity.Customer;
-import com.example.LoanApplicationSystem.model.entity.LoanScore;
 import com.example.LoanApplicationSystem.repository.CustomerRepository;
 import com.example.LoanApplicationSystem.service.CustomerService;
-import com.example.LoanApplicationSystem.service.LoanScoreService;
+import com.example.LoanApplicationSystem.service.CreditScoreService;
 import com.example.LoanApplicationSystem.service.constant.Messages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,19 +19,19 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerRepository customerRepository;
 
     @Autowired
-    private LoanScoreService loanScoreService;
+    private CreditScoreService creditScoreService;
 
     @Override
     public void addCustomer(Customer customer) {
-        if(checkIfCustomerAlreadyExist(customer.getIdentificationNumber())){
+        if(!checkIfCustomerAlreadyExist(customer.getNationalID())){
             customerRepository.save(customer);
-            loanScoreService.createLoanScoreToCustomer(customer);
+            creditScoreService.createCreditScoreToCustomer(customer);
         }
     }
 
     @Override
     public Customer updateCustomer(Customer customer) {
-        return null;
+        return customerRepository.save(customer);
     }
 
     @Override
@@ -58,24 +57,24 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer getCustomerByIdentificationNumber(String identificationNumber) {
+    public Customer getCustomerByNationalID(String nationalID) {
         List<Customer> allCustomer = getAllCustomer();
         return allCustomer.stream()
-                .filter((customer)->customer.getIdentificationNumber().equals(identificationNumber))
+                .filter((customer)->customer.getNationalID().equals(nationalID))
                 .findFirst().orElseThrow(()->new NotFoundException(Messages.customerNotFound));
     }
 
-    @Override
-    public int getMonthlyIncomeByCustomerId(int id) {
-        Customer customerById = getCustomerById(id);
-        return customerById.getMonthlyIncome() ;
-    }
 
-    private boolean checkIfCustomerAlreadyExist(String identificationNumber){
+    @Override
+    public boolean checkIfCustomerAlreadyExist(String nationalID){
         //eğer customer varsa false falan dönsğn ama acaba customer yerine tckn mu alsam
         //ya da optional class ile mi sağlsam bu durumu
         List<Customer> allCustomer = getAllCustomer();
-        return allCustomer.stream()
-                .noneMatch((customer)->customer.getIdentificationNumber().equals(identificationNumber));
+        return allCustomer.stream().anyMatch((c) -> c.getNationalID().equals(nationalID));
     }
+
+//    @Override
+//    public Optional<Customer> findByNationalId(String nationalId) {
+//        return customerRepository.findByNationalID(nationalId);
+//    }
 }
