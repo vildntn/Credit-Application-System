@@ -5,23 +5,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "loans")
-public class Loan {
-
+@Table(name = "credit_scores")
+public class CreditScore implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne()
+    @Column(name = "credit_score")
+    private int creditScore;
+
+    @NotNull(message = "Customer cannot be null")
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer;
-
-    @Column(name = "loan_limit")
-    private int loanLimit;
-
 }
