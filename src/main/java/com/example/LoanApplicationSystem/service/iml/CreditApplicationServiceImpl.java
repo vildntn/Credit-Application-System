@@ -35,18 +35,18 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
     @Override
     public String addCreditApplication(CreditApplication creditApplication) {
         creditApplicationRepository.save(creditApplication);
-        return Messages.loanApplicationAdded;
+        return Messages.creditApplicationAdded;
     }
 
     @Override
     public String deleteCreditApplication(int id) {
         creditApplicationRepository.delete(getCreditApplicationById(id));
-        return Messages.loanApplicationDeleted;
+        return Messages.creditApplicationDeleted;
     }
 
     @Override
     public CreditApplication updateCreditApplication(CreditApplication creditApplication) {
-        return null;
+        return creditApplicationRepository.save(creditApplication);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
         List<CreditApplication> creditApplication = getAllCreditApplication();
         return creditApplication.stream()
                 .filter((l) -> l.getCustomer().getId() == id).findFirst()
-                .orElseThrow(() -> new NotFoundException(Messages.loanApplicationDoesntFound));
+                .orElseThrow(() -> new NotFoundException(Messages.creditApplicationDoesntFound));
     }
 
     @Override
@@ -75,7 +75,7 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
         return creditApplication.stream()
                 .filter((l) -> l.getCustomer().getNationalID().equals(nationalID))
                 .findFirst()
-                .orElseThrow(() -> new NotFoundException(Messages.loanApplicationDoesntFound));
+                .orElseThrow(() -> new NotFoundException(Messages.creditApplicationDoesntFound));
     }
 
     //müşteri zaten varsa onu getirsin yoksa kayıt etsin ve score tanımlasın sonra bu işlemleri yapsın
