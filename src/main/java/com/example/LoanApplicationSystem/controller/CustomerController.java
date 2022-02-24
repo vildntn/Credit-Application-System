@@ -6,8 +6,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping ("/api/customer")
@@ -38,5 +40,15 @@ public class CustomerController {
     public List<Customer> getAllCustomer(){
         return customerService.getAllCustomer();
     }
+
+    @GetMapping("/getCustomerByNationalId")
+    public Customer getCustomerByNationalID( @RequestParam(required=false,name="nationalID") @Valid String nationalID){
+        return customerService.getCustomerByNationalID(nationalID);
+    }
+
+//    @GetMapping("/findByNationalID")
+//    public Optional<Customer> findByNationalId( @RequestParam(required=false,name="nationalID") String nationalId){
+//        return customerService.findByNationalId(nationalId);
+//    }
 
 }
