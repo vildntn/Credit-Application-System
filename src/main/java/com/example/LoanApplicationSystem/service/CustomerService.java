@@ -3,6 +3,7 @@ package com.example.LoanApplicationSystem.service;
 import com.example.LoanApplicationSystem.model.entity.Customer;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CustomerService {
 
@@ -12,6 +13,7 @@ public interface CustomerService {
     List<Customer> getAllCustomer();
     List<Customer> getAllCustomerBySortedDesc();
     Customer getCustomerById(int id);
-    Customer getCustomerByIdentificationNumber(String identificationNumber);
-    int getMonthlyIncomeByCustomerId(int id);
+    Customer getCustomerByNationalID(String nationalID);
+    boolean checkIfCustomerAlreadyExist(String nationalID);
+//    Optional<Customer> findByNationalId(String nationalId);
 }
