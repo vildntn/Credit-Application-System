@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface CreditApplicationService {
 
-     String addCreditApplication(CreditApplication creditApplication);
+     void addCreditApplication(CreditApplication creditApplication);
 
-     String deleteCreditApplication(int id);
+     boolean deleteCreditApplication(int id);
 
      CreditApplication updateCreditApplication(CreditApplication creditApplication);
 
