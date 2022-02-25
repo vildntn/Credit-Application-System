@@ -1,8 +1,10 @@
 package com.example.LoanApplicationSystem.service.iml;
 
-import com.example.LoanApplicationSystem.exception.NotFoundException;
-import com.example.LoanApplicationSystem.model.entity.Customer;
-import com.example.LoanApplicationSystem.repository.CustomerRepository;
+import com.example.CreditApplicationSystem.exception.NotFoundException;
+import com.example.CreditApplicationSystem.model.entity.Customer;
+import com.example.CreditApplicationSystem.repository.CustomerRepository;
+import com.example.CreditApplicationSystem.service.iml.CreditScoreServiceImpl;
+import com.example.CreditApplicationSystem.service.iml.CustomerServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

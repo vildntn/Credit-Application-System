@@ -1,6 +1,7 @@
 package com.example.LoanApplicationSystem.service.iml;
 
-import com.example.LoanApplicationSystem.repository.CreditScoreRepository;
+import com.example.CreditApplicationSystem.repository.CreditScoreRepository;
+import com.example.CreditApplicationSystem.service.iml.CreditScoreServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
