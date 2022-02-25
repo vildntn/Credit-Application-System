@@ -17,7 +17,7 @@ public class CreditApplicationProducer {
     private CreditApplicationService creditApplicationService;
 
 
-    public void sendLoanAppliation(@PathVariable Integer id) {
+    public void sendCreditAppliation(@PathVariable Integer id) {
         CreditApplication creditApplication = creditApplicationService.getCreditApplicationById(id);
         template.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.ROUTING_KEY, creditApplication);
 
