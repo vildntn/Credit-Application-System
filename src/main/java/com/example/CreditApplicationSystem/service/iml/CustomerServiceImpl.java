@@ -23,7 +23,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void addCustomer(Customer customer) {
-        if(!checkIfCustomerAlreadyExist(customer.getNationalID())){
+        if (!checkIfCustomerAlreadyExist(customer.getNationalID())) {
             customerRepository.save(customer);
             creditScoreService.createCreditScoreToCustomer(customer);
         }
@@ -52,23 +52,24 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer getCustomerById(int id) {
-        Optional<Customer> customerById =customerRepository.findById(id);
-        return customerById.orElseThrow(()->new NotFoundException(Messages.customerNotFound));
+        Optional<Customer> customerById = customerRepository.findById(id);
+        return customerById.orElseThrow(() -> new NotFoundException(Messages.customerNotFound));
     }
 
     @Override
     public Customer getCustomerByNationalID(String nationalID) {
         List<Customer> allCustomer = getAllCustomer();
         return allCustomer.stream()
-                .filter((customer)->customer.getNationalID().equals(nationalID))
-                .findFirst().orElseThrow(()->new NotFoundException(Messages.customerNotFound));
+                .filter((customer) -> customer.getNationalID().equals(nationalID))
+                .findFirst().orElseThrow(() -> new NotFoundException(Messages.customerNotFound));
     }
 
-
+    /*
+    * Helper method to not re-add if customer already exists.
+    * Returns true if there is a customer with the national id taken from the parameter.
+    * */
     @Override
-    public boolean checkIfCustomerAlreadyExist(String nationalID){
-        //eğer customer varsa false falan dönsğn ama acaba customer yerine tckn mu alsam
-        //ya da optional class ile mi sağlsam bu durumu
+    public boolean checkIfCustomerAlreadyExist(String nationalID) {
         List<Customer> allCustomer = getAllCustomer();
         return allCustomer.stream().anyMatch((c) -> c.getNationalID().equals(nationalID));
     }
