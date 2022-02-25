@@ -3,6 +3,8 @@ package com.example.CreditApplicationSystem.model.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -22,7 +24,8 @@ public class CreditScore implements Serializable {
     private int creditScore;
 
     @NotNull(message = "Customer cannot be null")
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer;
 }
