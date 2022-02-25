@@ -1,5 +1,6 @@
 package com.example.CreditApplicationSystem.exception.handler;
 
+import com.example.CreditApplicationSystem.exception.AlreadyExistException;
 import com.example.CreditApplicationSystem.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,5 +18,19 @@ public class GenericExceptionHandler {
         Map<String,String> response=new HashMap<>();
         response.put("message",exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(AlreadyExistException.class)
+    public ResponseEntity<Map> handleAlreadyExistException(AlreadyExistException exception){
+        Map<String,String> response=new HashMap<>();
+        response.put("message",exception.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map> handleException(Exception exception){
+        Map<String,String> response=new HashMap<>();
+        response.put("message",exception.getMessage());
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
     }
 }
