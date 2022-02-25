@@ -18,7 +18,7 @@ public class CustomerController {
     private CustomerService customerService;
 
 
-    @PostMapping("/addCustomer")
+    @PostMapping("/create")
     public void add(@RequestBody Customer customer) {
 
         customerService.addCustomer(customer);
@@ -29,17 +29,17 @@ public class CustomerController {
         return customerService.getCustomerById(id);
     }
 
-    @PostMapping("/deleteCustomer")
-    public boolean deleteCustomer(@PathVariable Integer id){
+    @DeleteMapping("/delete")
+    public boolean deleteCustomer(@RequestParam @Min(1) Integer id){
         return customerService.deleteCustomer(id);
     }
 
-    @GetMapping("/getAllCustomer")
+    @GetMapping("/all")
     public List<Customer> getAllCustomer(){
         return customerService.getAllCustomer();
     }
 
-    @GetMapping("/getCustomerByNationalId")
+    @GetMapping("/getCustomerByNationalID")
     public Customer getCustomerByNationalID( @RequestParam(required=false,name="nationalID") @Valid String nationalID){
         return customerService.getCustomerByNationalID(nationalID);
     }
