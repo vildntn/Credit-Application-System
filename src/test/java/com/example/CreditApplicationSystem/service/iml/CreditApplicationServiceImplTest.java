@@ -226,6 +226,8 @@ class CreditApplicationServiceImplTest {
         CreditApplication creditApplication=new CreditApplication(1,customer1,"Approved",20000,new Date());
         CreditApplication creditApplication1=new CreditApplication(2,customer2,"Approved",10000,new Date());
         List<CreditApplication>creditApplications=new ArrayList<>();
+        creditApplications.add(creditApplication1);
+        creditApplications.add(creditApplication);
 
 
         //when
