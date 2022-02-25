@@ -5,6 +5,7 @@ import com.example.CreditApplicationSystem.exception.NotFoundException;
 import com.example.CreditApplicationSystem.model.entity.CreditScore;
 import com.example.CreditApplicationSystem.model.entity.Customer;
 import com.example.CreditApplicationSystem.service.CreditScoreService;
+import com.example.CreditApplicationSystem.service.constant.Messages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +36,13 @@ public class CreditScoreServiceImpl implements CreditScoreService {
         List<CreditScore> allCreditScore = getAllCreditScore();
         return allCreditScore.stream()
                 .filter((l)->l.getCustomer().getNationalID().equals(nationalID))
-                .findAny().orElseThrow(()->new NotFoundException("Credit Score doesn't found"));
+                .findAny().
+                orElseThrow(()->new NotFoundException(Messages.creditScoreNotFound));
     }
     @Override
     public CreditScore getCreditScoreById(int id) {
         Optional<CreditScore> creditScoreById = creditScoreRepository.findById(id);
-        return creditScoreById.orElseThrow(()->new RuntimeException("Credit Score doesn't found"));
+        return creditScoreById.orElseThrow(()->new NotFoundException(Messages.creditScoreNotFound));
     }
 
     @Override

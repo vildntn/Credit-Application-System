@@ -46,11 +46,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> getAllCustomerBySortedDesc() {
-        return null;
-    }
-
-    @Override
     public Customer getCustomerById(int id) {
         Optional<Customer> customerById = customerRepository.findById(id);
         return customerById.orElseThrow(() -> new NotFoundException(Messages.customerNotFound));
@@ -74,8 +69,4 @@ public class CustomerServiceImpl implements CustomerService {
         return allCustomer.stream().anyMatch((c) -> c.getNationalID().equals(nationalID));
     }
 
-//    @Override
-//    public Optional<Customer> findByNationalId(String nationalId) {
-//        return customerRepository.findByNationalID(nationalId);
-//    }
 }
