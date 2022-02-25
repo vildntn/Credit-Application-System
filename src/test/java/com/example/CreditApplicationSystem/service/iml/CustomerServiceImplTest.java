@@ -16,6 +16,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceImplTest {
 
@@ -72,6 +73,15 @@ class CustomerServiceImplTest {
     }
 
     @Test
+    void deleteCustomer_not() {
+        //stub - when
+        when(customerRepository.findById(1)).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> {
+                    boolean deletedCustomer = customerService.deleteCustomer(1);
+        });
+    }
+
+    @Test
     void getAllCustomer() {
         //init step
         Customer customer = new Customer(1, "Dale", "Gomez", "81566338254", "81547833825", 5500);
@@ -90,8 +100,18 @@ class CustomerServiceImplTest {
     }
 
     @Test
-    void getAllCustomerBySortedDesc() {
+    void getAllCustomer_empty() {
+        //init step
+        List<Customer> customers = new ArrayList<>();
+        //stub-when
+        when(customerRepository.findAll()).thenReturn(customers);
+
+        //then
+        List<Customer> allCustomer = customerService.getAllCustomer();
+        assertEquals(0, allCustomer.size());
+
     }
+
 
     @Test
     void getCustomerById_successful() {
@@ -124,43 +144,35 @@ class CustomerServiceImplTest {
     @Test
     void getCustomerByNationalID_success() {
         //init step
-        Customer expectedCustomer = new Customer(1, "Dale", "Gomez", "81566338254", "81547833825", 5500);
-
+        Customer customer = new Customer(1, "Dale", "Gomez", "81566338254", "81547833825", 5500);
+        Customer customer1 = new Customer(2, "Andrew", "Hooper", "22255942075", "2255942075", 4500);
+        List<Customer> customers = new ArrayList<>();
+        customers.add(customer1);
+        customers.add(customer);
         //stub - when
-        when(customerRepository.findByNationalID("81566338254")).thenReturn(Optional.of(expectedCustomer));
+        when(customerRepository.findAll()).thenReturn(customers);
 
         //then step
         Customer actualCustomer = customerService.getCustomerByNationalID("81566338254");
 
         //valid step
-        assertEquals(expectedCustomer, actualCustomer);
+        assertEquals(customer.getNationalID(), actualCustomer.getNationalID());
 
     }
 
     @Test
     void getCustomerByNationalID_not_found() {
-
+        //init step
+        List<Customer> customers = new ArrayList<>();
         //stub - when
-        when(customerRepository.findByNationalID("81566338254")).thenReturn(Optional.empty());
+        when(customerRepository.findAll()).thenReturn(customers);
+
         assertThrows(NotFoundException.class, () -> {
             //then step
             Customer actualCustomer = customerService.getCustomerByNationalID("81566338254");
         });
     }
 
-    @Test
-    void checkIfCustomerAlreadyExist_not_exist() {
-        //init step
-        Customer expectedCustomer = new Customer(1, "Dale", "Gomez", "81566338254", "81547833825", 5500);
-
-        //stub - when
-
-        //then step
-        boolean actualCustomer = customerService.checkIfCustomerAlreadyExist("81566338254");
-
-        //Valid step
-        assertFalse(actualCustomer);
-    }
 
     @Test
     void checkIfCustomerAlreadyExist_exist() {
@@ -172,12 +184,24 @@ class CustomerServiceImplTest {
         customers.add(customer2);
 
         //stub - when
-
-         when(customerService.getCustomerById(1)).thenReturn(customer1);
+        when(customerRepository.findAll()).thenReturn(customers);
         //then step
         boolean actualCustomer = customerService.checkIfCustomerAlreadyExist("81566338254");
 
         //Valid step
         assertTrue(actualCustomer);
+    }
+
+    @Test
+    void checkIfCustomerAlreadyExist_not_exist() {
+        //init step
+        List<Customer> customers=new ArrayList<>();
+        //stub - when
+        when(customerRepository.findAll()).thenReturn(customers);
+        //then step
+        boolean actualCustomer = customerService.checkIfCustomerAlreadyExist("81566338254");
+
+        //Valid step
+        assertFalse(actualCustomer);
     }
 }
