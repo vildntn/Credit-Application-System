@@ -15,40 +15,40 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/creditApplication")
+@CrossOrigin()
 public class CreditApplicationController {
     @Autowired
     private CreditApplicationService creditApplicationService;
 
 
-    @GetMapping("/getAllCreditApplication")
-    public List<CreditApplication> getAllLoanApplication(){
+    @GetMapping("/all")
+    public List<CreditApplication> getAllCreditApplication(){
         return creditApplicationService.getAllCreditApplication();
     }
 
-    @GetMapping("/getCreditApplicationById")
-    public CreditApplication getLoanApplicationById(int id){
+    @GetMapping("/{id}")
+    public CreditApplication getCreditApplicationById(@PathVariable @Min(1) int id){
         return creditApplicationService.getCreditApplicationById(id);
     }
 
 
 
-    @PostMapping("/addCreditApplication")
-    public String addLoanApplication( @RequestBody CreditApplication loanApplication){
+    @PostMapping("/create")
+    public void addCreditApplication( @RequestBody CreditApplication loanApplication){
         creditApplicationService.addCreditApplication(loanApplication);
-        return Messages.creditApplicationAdded;
     }
     @GetMapping("/checkCreditApplicationStatus")
-    public CreditApplication checkLoanApplicationStatus(String identificationNumber){
-        return creditApplicationService.checkCreditApplicationStatus(identificationNumber);
+    public CreditApplication checkCreditApplicationStatus(@RequestParam(required=false,name="nationalID") @Valid String nationalID){
+        return creditApplicationService.checkCreditApplicationStatus(nationalID);
     }
 
-    @GetMapping("/getCreditApplicationByCustomerId")
-    public CreditApplication getLoanApplicationByCustomerId(@RequestParam @Min(1) int  id){
+    @GetMapping("/by-customer")
+    public CreditApplication getCreditApplicationByCustomerId(@RequestParam @Min(1) int  id){
         return creditApplicationService.getCreditApplicationByCustomerId(id);
     }
 
     @PostMapping("/checkCreditApplicationResult")
-    public CreditApplicationDto checkLoanApplicationResult(@RequestBody @Valid Customer customer){
+    public CreditApplicationDto checkCreditApplicationResult(@RequestBody @Valid Customer customer){
         return CreditApplicationMapper.toDto(creditApplicationService.checkCreditApplicationResult(customer));
     }
 }
