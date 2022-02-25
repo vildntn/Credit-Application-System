@@ -1,5 +1,6 @@
 package com.example.CreditApplicationSystem.service.iml;
 
+import com.example.CreditApplicationSystem.exception.AlreadyExistException;
 import com.example.CreditApplicationSystem.messaging.producer.CreditApplicationProducer;
 import com.example.CreditApplicationSystem.service.constant.Messages;
 import com.example.CreditApplicationSystem.exception.NotFoundException;
@@ -33,15 +34,14 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
     private CreditApplicationProducer creditApplicationProducer;
 
     @Override
-    public String addCreditApplication(CreditApplication creditApplication) {
+    public void addCreditApplication(CreditApplication creditApplication) {
         creditApplicationRepository.save(creditApplication);
-        return Messages.creditApplicationAdded;
     }
 
     @Override
-    public String deleteCreditApplication(int id) {
+    public boolean deleteCreditApplication(int id) {
         creditApplicationRepository.delete(getCreditApplicationById(id));
-        return Messages.creditApplicationDeleted;
+        return true;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
     @Override
     public CreditApplication getCreditApplicationById(int id) {
         Optional<CreditApplication> creditApplication = creditApplicationRepository.findById(id);
-        return creditApplication.orElseThrow(() -> new RuntimeException("Credit Application doesn't found"));
+        return creditApplication.orElseThrow(() -> new AlreadyExistException(Messages.creditApplicationAlreadyExist));
     }
 
     @Override
@@ -70,7 +70,7 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
 
     @Override
     public CreditApplication checkCreditApplicationStatus(String nationalID) {
-        Customer customer = customerService.getCustomerByNationalID(nationalID);
+        //Customer customer = customerService.getCustomerByNationalID(nationalID);
         List<CreditApplication> creditApplication = getAllCreditApplication();
         return creditApplication.stream()
                 .filter((l) -> l.getCustomer().getNationalID().equals(nationalID))
@@ -92,14 +92,14 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
         Customer certainCustomer = customerService.getCustomerByNationalID(customer.getNationalID());
         CreditScore creditScore = creditScoreService.getCreditScoreByCustomerNationalID(customer.getNationalID());
         if (isLoanScoreApprovel(creditScore.getCreditScore())) {
-            CreditApplication loanApplication = setLoanApplication("Approved", getLoanLimit(customer.getNationalID()), certainCustomer);
-            creditApplicationProducer.sendLoanAppliation(loanApplication.getId());
-            return loanApplication;
+            CreditApplication creditApplication = setCreditApplication("Approved", getLoanLimit(customer.getNationalID()), certainCustomer);
+            creditApplicationProducer.sendCreditAppliation(creditApplication.getId());
+            return creditApplication;
 
         }
-        CreditApplication loanApplication = setLoanApplication("Rejected", getLoanLimit(customer.getNationalID()), certainCustomer);
-        creditApplicationProducer.sendLoanAppliation(loanApplication.getId());
-        return loanApplication;
+        CreditApplication creditApplication = setCreditApplication("Rejected", getLoanLimit(customer.getNationalID()), certainCustomer);
+        creditApplicationProducer.sendCreditAppliation(creditApplication.getId());
+        return creditApplication;
     }
 
 
@@ -131,21 +131,23 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
         return loanLimit;
     }
 
-    private CreditApplication setLoanApplication(String loanStatus, int loanLimit, Customer customer) {
+    private CreditApplication setCreditApplication(String creditStatus, int creditLimit, Customer customer) {
         CreditApplication creditApplication = new CreditApplication();
-        creditApplication.setCreditStatus(loanStatus);
-        creditApplication.setCreditLimit(loanLimit);
-        creditApplication.setCustomer(customer);
-        creditApplication.setApplicationDate(new Date());
-        addCreditApplication(creditApplication);
+        if(!checkIfCreditApplicationAlreadyExist(customer.getId())){
+            creditApplication.setCreditStatus(creditStatus);
+            creditApplication.setCreditLimit(creditLimit);
+            creditApplication.setCustomer(customer);
+            creditApplication.setApplicationDate(new Date());
+            addCreditApplication(creditApplication);
+        }
         return creditApplication;
     }
 
 
-//    private boolean chackIfLoanApplicationAlreadyExist(String nationalID) {
-//        List<LoanApplication> allLoanApplication = getAllLoanApplication();
-//        return allLoanApplication.stream().anyMatch((l) -> l.getCustomer().getNationalID().equals(nationalID));
-//    }
+    private boolean checkIfCreditApplicationAlreadyExist(int customerId) {
+        List<CreditApplication> allCreditApplication = getAllCreditApplication();
+        return allCreditApplication.stream().anyMatch((l) -> l.getCustomer().getId()==(customerId));
+    }
 
 //    private boolean getloanSDeneme(String nationalID){
 //        List<LoanApplication> allLoanApplication = getAllLoanApplication();
