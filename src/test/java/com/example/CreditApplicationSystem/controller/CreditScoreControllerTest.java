@@ -94,7 +94,30 @@ class CreditScoreControllerTest {
 //        String actualResponseStr = response.getContentAsString();
 //        Assert.assertEquals("true", actualResponseStr);
     }
+    @Test
+    void updateCreditScore() throws Exception {
+        // init test values
+        List<CreditScore> expectedCreditScores = getTestCreditScores();
+        Customer customer1 = new Customer(1, "Dale", "Gomez", "81566338254", "81547833825", 5500);
+        CreditScore expectedCreditScore=new CreditScore(1,450,customer1);
 
+        // stub - given
+
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String expectedCreditScoreJsonStr = ow.writeValueAsString(expectedCreditScore);
+        Mockito.when(creditScoreService.updateCreditScore(expectedCreditScore)).thenReturn(expectedCreditScores.get(0));
+
+        MockHttpServletResponse response = mvc.perform(put("/api/creditScore/update")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(expectedCreditScoreJsonStr))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn().getResponse();
+
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+    }
     @Test
     void getCreditScoreById() throws Exception {
         // init test values
