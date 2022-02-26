@@ -7,8 +7,13 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Service
+//@Service
+@RestController
+@RequestMapping("/messaging/publishCreditApplication")
 public class CreditApplicationProducer {
     @Autowired
     private RabbitTemplate template;
@@ -16,8 +21,8 @@ public class CreditApplicationProducer {
     @Autowired
     private CreditApplicationService creditApplicationService;
 
-
-    public void sendCreditAppliation(@PathVariable Integer id) {
+    @PostMapping("/creditApplication/{id}")
+    public void sendCreditAppliation(@PathVariable int id) {
         CreditApplication creditApplication = creditApplicationService.getCreditApplicationById(id);
         template.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.ROUTING_KEY, creditApplication);
 
