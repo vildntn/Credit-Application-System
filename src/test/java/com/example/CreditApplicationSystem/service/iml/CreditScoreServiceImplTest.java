@@ -44,6 +44,20 @@ class CreditScoreServiceImplTest {
         verify(creditScoreRepository, times(1)).save(creditScore);
 
     }
+    @Test
+    void updateCreditScore() {
+        //init step
+        Customer expectedCustomer = new Customer(1, "Dale", "Gomez", "81566338254", "81547833825", 5500);
+        CreditScore expectedCreditScore=new CreditScore(1,450,expectedCustomer);
+        expectedCreditScore.setCreditScore(500);
+        //stub - when
+        when(creditScoreRepository.save(expectedCreditScore)).thenReturn(expectedCreditScore);
+
+        //then
+        CreditScore actualCreditScore = creditScoreService.updateCreditScore(expectedCreditScore);
+
+        assertEquals(expectedCreditScore, actualCreditScore);
+    }
 
     @Test
     void deleteCreditScore() {
