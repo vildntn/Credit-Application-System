@@ -1,5 +1,6 @@
 package com.example.CreditApplicationSystem.controller;
 
+import com.example.CreditApplicationSystem.model.entity.CreditApplication;
 import com.example.CreditApplicationSystem.model.entity.CreditScore;
 import com.example.CreditApplicationSystem.service.CreditScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,10 @@ public class CreditScoreController {
     @GetMapping("/{id}")
    public CreditScore getCreditScoreById(@PathVariable @Min(1) int id){
         return creditScoreService.getCreditScoreById(id);
+    }
+    @PutMapping(value = "/update")
+    public CreditScore updateCreditScore(@RequestBody CreditScore creditScore) {
+        return creditScoreService.updateCreditScore(creditScore);
     }
 
     @GetMapping("/all")
