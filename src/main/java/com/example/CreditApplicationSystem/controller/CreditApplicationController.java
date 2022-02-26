@@ -31,7 +31,10 @@ public class CreditApplicationController {
         return creditApplicationService.getCreditApplicationById(id);
     }
 
-
+    @PutMapping(value = "/update")
+    public CreditApplication updateCreditApplication(@RequestBody CreditApplication creditApplication) {
+        return creditApplicationService.updateCreditApplication(creditApplication);
+    }
 
     @PostMapping("/create")
     public void addCreditApplication( @RequestBody CreditApplication loanApplication){
