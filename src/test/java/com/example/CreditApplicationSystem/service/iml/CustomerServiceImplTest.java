@@ -48,14 +48,13 @@ class CustomerServiceImplTest {
     void updateCustomer() {
         //init step
         Customer expectedCustomer = new Customer(1, "Dale", "Gomez", "81566338254", "81547833825", 5500);
-        Customer newCustomer = expectedCustomer;
-        newCustomer.setNationalID("81946338254");
-        newCustomer.setFirstName("Adrian");
+        expectedCustomer.setNationalID("81946338254");
+        expectedCustomer.setFirstName("Adrian");
         //stub - when
         when(customerRepository.save(expectedCustomer)).thenReturn(expectedCustomer);
 
         //then
-        Customer actualCustomer = customerService.updateCustomer(newCustomer);
+        Customer actualCustomer = customerService.updateCustomer(expectedCustomer);
 
         assertEquals(expectedCustomer, actualCustomer);
     }
