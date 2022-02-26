@@ -1,5 +1,6 @@
 package com.example.CreditApplicationSystem.controller;
 
+import com.example.CreditApplicationSystem.model.entity.CreditScore;
 import com.example.CreditApplicationSystem.model.entity.Customer;
 import com.example.CreditApplicationSystem.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,11 @@ public class CustomerController {
     public void add(@RequestBody Customer customer) {
 
         customerService.addCustomer(customer);
+    }
+
+    @PutMapping(value = "/update")
+    public Customer updateCustomer(@RequestBody Customer customer) {
+        return customerService.updateCustomer(customer);
     }
 
     @GetMapping(value="/{id}")
