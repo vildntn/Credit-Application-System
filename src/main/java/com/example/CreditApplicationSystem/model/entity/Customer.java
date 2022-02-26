@@ -44,9 +44,4 @@ public class Customer implements Serializable {
     @Column(name = "monthly_income")
     private int monthlyIncome;
 
-//
-//    @OneToOne(cascade = CascadeType.ALL)
-//    private CreditScore loanScore;
-
-
 }

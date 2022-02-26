@@ -24,10 +24,6 @@ public class CreditApplication implements Serializable {
     @JoinColumn(name = "customer_id",referencedColumnName="id")
     private Customer customer;
 
-//    @OneToOne(cascade = CascadeType.MERGE)
-//    @JoinColumn(name = "loan_score_id", referencedColumnName = "id")
-//    private CreditScore loanScore;
-
     @Column(name = "credit_status")
     private String creditStatus;
 
@@ -36,9 +32,5 @@ public class CreditApplication implements Serializable {
 
     @Column(name = "application_date")
     private Date applicationDate;
-
-//    @Column(name = "status")
-//    private boolean status;
-
 
 }
