@@ -118,6 +118,36 @@ class CustomerControllerTest {
     }
 
     @Test
+    void updateCustomer() throws Exception {
+        // init test values
+        List<Customer> expectedCustomers = getTestCustomers();
+        Customer expectedCustomer = new Customer();
+        expectedCustomer.setFirstName("Henry");
+        expectedCustomer.setLastName("Cavill");
+        expectedCustomer.setNationalID("28795641582");
+        expectedCustomer.setPhoneNumber("5064789852");
+        expectedCustomer.setMonthlyIncome(7500);
+        expectedCustomers.add(expectedCustomer);
+
+        // stub - given
+
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String expectedCustomerJsonStr = ow.writeValueAsString(expectedCustomer);
+        Mockito.when(customerService.updateCustomer(expectedCustomer)).thenReturn(expectedCustomers.get(0));
+
+        MockHttpServletResponse response = mvc.perform(put("/api/customer/update")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(expectedCustomerJsonStr))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn().getResponse();
+
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
     void getAllCustomer() throws Exception {
         // init test values / given
         List<Customer> expectedCustomers = getTestCustomers();
