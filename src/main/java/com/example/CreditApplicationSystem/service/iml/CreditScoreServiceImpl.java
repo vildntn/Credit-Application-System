@@ -30,6 +30,11 @@ public class CreditScoreServiceImpl implements CreditScoreService {
         return true;
     }
 
+    @Override
+    public CreditScore updateCreditScore(CreditScore creditScore) {
+        return creditScoreRepository.save(creditScore);
+    }
+
 
     @Override
     public CreditScore getCreditScoreByCustomerNationalID(String nationalID) {
