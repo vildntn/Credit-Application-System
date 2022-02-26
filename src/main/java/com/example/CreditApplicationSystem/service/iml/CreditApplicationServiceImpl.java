@@ -30,8 +30,8 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
     @Autowired
     private CreditScoreService creditScoreService;
 
-    @Autowired
-    private CreditApplicationProducer creditApplicationProducer;
+//    @Autowired
+//    private CreditApplicationProducer creditApplicationProducer;
 
     @Override
     public void addCreditApplication(CreditApplication creditApplication) {
@@ -78,12 +78,13 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
                 .orElseThrow(() -> new NotFoundException(Messages.creditApplicationDoesntFound));
     }
 
-    //müşteri zaten varsa onu getirsin yoksa kayıt etsin ve score tanımlasın sonra bu işlemleri yapsın
     /*
-     * İsterde müşterinin kayıt olması gerektiği gibi bir zorunluluk yok.
-     * Ayrıca eğer sistemde tanımlı customer yoksa loanı bulamıyor.
-     * */
-
+    * An application was requested based on customer information.
+    * Considering the customer's non-registration, it is designed to be the first registration if there is no customer.
+    * In case of compliance with the rules, the credit application is created and a credit limit is assigned to the customer.
+    * Direct sending service to rabbitmq of the recorded loan application for sms simulation has been written.
+    * But then it was converted to controller.
+    * */
     @Override
     public CreditApplication checkCreditApplicationResult(Customer customer) {
         if (!customerService.checkIfCustomerAlreadyExist(customer.getNationalID())) {
@@ -93,18 +94,17 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
         CreditScore creditScore = creditScoreService.getCreditScoreByCustomerNationalID(customer.getNationalID());
         if (isLoanScoreApprovel(creditScore.getCreditScore())) {
             CreditApplication creditApplication = setCreditApplication("Approved", getLoanLimit(customer.getNationalID()), certainCustomer);
-            creditApplicationProducer.sendCreditAppliation(creditApplication.getId());
+            //creditApplicationProducer.sendCreditAppliation(creditApplication);
             return creditApplication;
 
         }
         CreditApplication creditApplication = setCreditApplication("Rejected", getLoanLimit(customer.getNationalID()), certainCustomer);
-        creditApplicationProducer.sendCreditAppliation(creditApplication.getId());
+        //creditApplicationProducer.sendCreditAppliation(creditApplication);
         return creditApplication;
     }
 
-
+    /*It is a helpful method for direct rejection of the user if the credit score is below 500.*/
     private boolean isLoanScoreApprovel(int score) {
-        //Eğer loan score 500'den küçükse false döndür geri kalanı true yap
         if (score < 500) {
             return false;
         }
@@ -131,9 +131,13 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
         return loanLimit;
     }
 
+    /*
+    * Since the same operations can be performed in more than one place, a method has been collected.
+    * According to the information received, if there is no loan application, it is recorded.
+    * */
     private CreditApplication setCreditApplication(String creditStatus, int creditLimit, Customer customer) {
         CreditApplication creditApplication = new CreditApplication();
-        if(!checkIfCreditApplicationAlreadyExist(customer.getId())){
+        if (!checkIfCreditApplicationAlreadyExist(customer.getId())) {
             creditApplication.setCreditStatus(creditStatus);
             creditApplication.setCreditLimit(creditLimit);
             creditApplication.setCustomer(customer);
@@ -146,57 +150,7 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
 
     private boolean checkIfCreditApplicationAlreadyExist(int customerId) {
         List<CreditApplication> allCreditApplication = getAllCreditApplication();
-        return allCreditApplication.stream().anyMatch((l) -> l.getCustomer().getId()==(customerId));
+        return allCreditApplication.stream().anyMatch((l) -> l.getCustomer().getId() == (customerId));
     }
-
-//    private boolean getloanSDeneme(String nationalID){
-//        List<LoanApplication> allLoanApplication = getAllLoanApplication();
-//        return allLoanApplication.stream()
-//                .filter((l) -> l.getCustomer().getNationalID().equals(nationalID))
-//                .filter((ln) -> ln.getCustomer().getLoanScore().getLoanScore()>= 500 & ln.getCustomer().getLoanScore().getLoanScore() < 1000)
-//                .anyMatch((c) -> c.getCustomer().getMonthlyIncome() < 5000);
-//
-//    }
-//
-//    private boolean getloanSecond(String nationalID){
-//        List<LoanApplication> allLoanApplication = getAllLoanApplication();
-//        return allLoanApplication.stream()
-//                .filter((l) -> l.getCustomer().getNationalID().equals(nationalID))
-//                .filter((ln) -> ln.getCustomer().getLoanScore().getLoanScore()>= 500 & ln.getCustomer().getLoanScore().getLoanScore() < 1000)
-//                .anyMatch((c) -> c.getCustomer().getMonthlyIncome() >= 5000);
-//
-//    }
-//
-//    private int getLoanLimitDeneme(String nationalID){
-//        CreditScore loanScore = creditScoreService.getLoanScoreByCustomerNationalID(nationalID);
-//        Customer customer = customerService.getCustomerByNationalID(nationalID);
-//        int loanLimit=0;
-//        if (getloanSDeneme(nationalID)) {
-//                loanLimit=10000;
-//                return loanLimit;
-//        }
-//       if(getloanSecond(nationalID)){
-//            loanLimit=20000;
-//            return loanLimit;
-//        }
-//         if(loanScore.getLoanScore() >= 1000){
-//            return customer.getMonthlyIncome()*4;
-//        }
-//        return loanLimit;
-//    }
-//
-
-//    private LoanApplication setLoanApplication(String loanStatus,int loanLimit, Customer customer){
-//        LoanApplication loanApplication=new LoanApplication();
-//        boolean loanApplicationAlreadyExist = chackIfLoanApplicationAlreadyExist(customer.getNationalID());
-//        if(!loanApplicationAlreadyExist){
-//            loanApplication.setLoanStatus(loanStatus);
-//            loanApplication.setLoanLimit(loanLimit);
-//            loanApplication.setCustomer(customer);
-//            loanApplication.setApplicationDate(new Date());
-//            addLoanApplication(loanApplication);
-//        }
-//        return loanApplication;
-//    }
 
 }

@@ -11,7 +11,6 @@ public interface CreditScoreService {
     boolean deleteCreditScore(int id);
     CreditScore getCreditScoreById(int id);
     List<CreditScore> getAllCreditScore();
-    int getCreditScoreByCustomerId(int id);
     void createCreditScoreToCustomer(Customer customer);
     CreditScore getCreditScoreByCustomerNationalID(String nationalID);
 

@@ -50,10 +50,6 @@ public class CreditScoreServiceImpl implements CreditScoreService {
         return creditScoreRepository.findAll();
     }
 
-    @Override
-    public int getCreditScoreByCustomerId(int id) {
-        return creditScoreRepository.getCreditScoreByCustomerId(id);
-    }
 
     @Override
     public void createCreditScoreToCustomer(Customer customer) {
