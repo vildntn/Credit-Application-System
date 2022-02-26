@@ -44,9 +44,4 @@ public class CustomerController {
         return customerService.getCustomerByNationalID(nationalID);
     }
 
-//    @GetMapping("/findByNationalID")
-//    public Optional<Customer> findByNationalId( @RequestParam(required=false,name="nationalID") String nationalId){
-//        return customerService.findByNationalId(nationalId);
-//    }
-
 }
