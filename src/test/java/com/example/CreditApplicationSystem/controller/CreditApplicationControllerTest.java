@@ -158,6 +158,23 @@ class CreditApplicationControllerTest {
 
     @Test
     void checkCreditApplicationResult()throws Exception {
+        // init test values
+        List<CreditApplication> expectedCreditApplications = getTestCreditApplications();
+        Customer customer1 = new Customer(1, "Dale", "Gomez", "81566338254", "81547833825", 5500);
+
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String expectedCreditApplicationJsonStr = ow.writeValueAsString(customer1);
+        Mockito.when(creditApplicationService.checkCreditApplicationResult(customer1)).thenReturn(expectedCreditApplications.get(0));
+
+        MockHttpServletResponse response = mvc.perform(post("/api/creditApplication/checkCreditApplicationResult")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(expectedCreditApplicationJsonStr))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn().getResponse();
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     }
 
     private List<CreditApplication> getTestCreditApplications(){
