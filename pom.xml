@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.5.7</version>    <!-- önceki versiyon 2.6.2 idi ama swagger 2.6 dan sonrasıyla çalışmıyor ,şimdi de not found hatası veriyor maven -->
+		<version>2.6.2</version> 
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
