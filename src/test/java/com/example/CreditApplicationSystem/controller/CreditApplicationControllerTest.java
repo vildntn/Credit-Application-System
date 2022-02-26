@@ -117,6 +117,30 @@ class CreditApplicationControllerTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         Mockito.verify(creditApplicationService, Mockito.times(1)).addCreditApplication(any());
     }
+    @Test
+    void updateCreditApplication() throws Exception {
+        // init test values
+        List<CreditApplication> expectedCreditApplications = getTestCreditApplications();
+        Customer customer1 = new Customer(1, "Dale", "Gomez", "81566338254", "81547833825", 5500);
+        CreditApplication expectedCreditApplication=new CreditApplication(1,customer1,"Approved",20000,new Date());
+
+        // stub - given
+
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String expectedCreditApplicationJsonStr = ow.writeValueAsString(expectedCreditApplication);
+        Mockito.when(creditApplicationService.updateCreditApplication(expectedCreditApplication)).thenReturn(expectedCreditApplications.get(0));
+
+        MockHttpServletResponse response = mvc.perform(put("/api/creditApplication/update")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(expectedCreditApplicationJsonStr))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn().getResponse();
+
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+    }
 
     @Test
     void checkCreditApplicationStatus() throws Exception{
