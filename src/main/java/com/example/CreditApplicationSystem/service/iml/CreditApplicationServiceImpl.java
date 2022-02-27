@@ -52,7 +52,7 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
     @Override
     public CreditApplication getCreditApplicationById(int id) {
         Optional<CreditApplication> creditApplication = creditApplicationRepository.findById(id);
-        return creditApplication.orElseThrow(() -> new AlreadyExistException(Messages.creditApplicationAlreadyExist));
+        return creditApplication.orElseThrow(() -> new NotFoundException(Messages.creditApplicationDoesntFound));
     }
 
     @Override
@@ -137,20 +137,24 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
     * */
     private CreditApplication setCreditApplication(String creditStatus, int creditLimit, Customer customer) {
         CreditApplication creditApplication = new CreditApplication();
-        if (!checkIfCreditApplicationAlreadyExist(customer.getId())) {
-            creditApplication.setCreditStatus(creditStatus);
-            creditApplication.setCreditLimit(creditLimit);
-            creditApplication.setCustomer(customer);
-            creditApplication.setApplicationDate(new Date());
-            addCreditApplication(creditApplication);
+        if (!checkIfCreditApplicationAlreadyExist(customer.getNationalID())) {
+            throw new AlreadyExistException(Messages.creditApplicationAlreadyExist);
         }
+        creditApplication.setCreditStatus(creditStatus);
+        creditApplication.setCreditLimit(creditLimit);
+        creditApplication.setCustomer(customer);
+        creditApplication.setApplicationDate(new Date());
+        addCreditApplication(creditApplication);
         return creditApplication;
     }
 
 
-    private boolean checkIfCreditApplicationAlreadyExist(int customerId) {
-        List<CreditApplication> allCreditApplication = getAllCreditApplication();
-        return allCreditApplication.stream().anyMatch((l) -> l.getCustomer().getId() == (customerId));
+    private boolean checkIfCreditApplicationAlreadyExist(String nationalID) {
+        CreditApplication creditApplication = creditApplicationRepository.findByCustomer_NationalID(nationalID);
+        if(creditApplication !=null){
+            return false;
+        }
+        return true;
     }
 
 }
