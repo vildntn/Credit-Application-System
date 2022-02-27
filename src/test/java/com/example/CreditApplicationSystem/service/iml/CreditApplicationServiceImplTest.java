@@ -112,7 +112,7 @@ class CreditApplicationServiceImplTest {
         when(creditApplicationRepository.findById(1)).thenReturn(Optional.empty());
 
         //then
-        assertThrows(AlreadyExistException.class, () -> {
+        assertThrows(NotFoundException.class, () -> {
             CreditApplication actualCreditApplication = creditApplicationService.getCreditApplicationById(1);
         });
     }
