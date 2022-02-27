@@ -72,7 +72,7 @@ class CreditApplicationServiceImplTest {
         when(creditApplicationRepository.findById(1)).thenReturn(Optional.empty());
 
         //then step
-        assertThrows(AlreadyExistException.class, () -> {
+        assertThrows(NotFoundException.class, () -> {
             boolean deletedCreditApplication = creditApplicationService.deleteCreditApplication(1);
         });
 
